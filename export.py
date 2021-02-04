@@ -15,6 +15,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 
 import db
 from dateutil import format_tran_date_for_file, format_tran_date_for_qif,\
@@ -58,7 +59,12 @@ def get_next_btn(browser):
 
 def login(creds):
 
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.binary_location = "/usr/bin/chromium-browser"
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(chrome_options=chrome_options)
     driver.get(BASE_URL)
 
     time.sleep(WAIT_DELAY)
@@ -166,6 +172,7 @@ def get_file_name(export_path, s_d, e_d, extension):
 
 def export(csv, slow):
 
+    global WAIT_DELAY
     print('Use "export.py --help" to see all command line options')
     if slow:
         WAIT_DELAY = 25
